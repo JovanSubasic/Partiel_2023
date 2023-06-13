@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import React, { useState, useEffect  } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
+import {  CheckBox  } from '@rneui/base';
 
 import Header from './composants/Header';
 import ListJeux from './composants/ListJeux';
@@ -77,7 +78,6 @@ export default function App() {
 
   const [listJeuxFilter, setListJeuxFilter] = useState([]);
 
-  // console.log(listJeuxFilter.length)
   // liste categorie sans duplication
   let uniqueCategorie = listJeux.map(({ categorie }) => categorie).filter((element, index) => {
       return listJeux.map(({ categorie }) => categorie).indexOf(element) === index;
@@ -95,22 +95,64 @@ export default function App() {
     
   }
 
+
+  function filtrerPrix(trie) {
+
+    let listTrie = [];
+
+    if(listJeuxFilter.length > 0) 
+    {
+      listTrie = [...listJeuxFilter];
+    }
+    else listTrie = [...listJeux];
+
+    if(trie == 'Croissant')
+    {
+      listTrie.sort((j1, j2) => (Number(j1.price.replace('€', '')) > Number(j2.price.replace('€', ''))) ? 1 : (Number(j1.price.replace('€', '')) < Number(j2.price.replace('€', ''))) ? -1 : 0);
+    }
+    else listTrie.sort((j1, j2) => (Number(j1.price.replace('€', '')) < Number(j2.price.replace('€', ''))) ? 1 : (Number(j1.price.replace('€', '')) > Number(j2.price.replace('€', ''))) ? -1 : 0);
+
+    
+    if(listJeuxFilter.length > 0) 
+    {
+      setListJeuxFilter(listTrie)
+    }
+    else setListJeux(listTrie)
+    // console.log(listTrie)
+    
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Header listJeux={listJeux} listJeuxFilter={listJeuxFilter}/>
-      <SelectDropdown
-          data={uniqueCategorie}
+      <View style={styles.fixToText}>
+        <SelectDropdown
+            data={uniqueCategorie}
 
-          onSelect={(selectedItem, index) => {
-            filtrerCategorie(selectedItem)
-              // console.log(selectedItem);
-          }}
-          // buttonStyle={styles.dropdownButton}
+            onSelect={(selectedItem, index) => {
+              filtrerCategorie(selectedItem)
+                // console.log(selectedItem);
+            }}
+            buttonStyle={styles.dropdownButton}
 
-          // defaultValue={selectHour}
+            // defaultValue={selectHour}
 
-          defaultButtonText={'Filtrer par catégorie'}
-      /> 
+            defaultButtonText={'Filtrer par catégorie'}
+        /> 
+        <SelectDropdown
+            data={["Croissant", "Décroissant"]}
+
+            onSelect={(selectedItem, index) => {
+              filtrerPrix(selectedItem)
+                // console.log(selectedItem);
+            }}
+            buttonStyle={styles.dropdownButton}
+
+            // defaultValue={selectHour}
+
+            defaultButtonText={'Filtrer par prix'}
+        /> 
+      </View>
       <ListJeux listJeux={listJeux} listJeuxFilter={listJeuxFilter}/>
       <AddJeux listJeux={listJeux} setListJeux={setListJeux}/>
       <StatusBar style="auto" />
@@ -122,7 +164,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+  },
+  fixToText: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: 5,
+    fontSize: 18,
+    marginBottom: 10,
+    marginTop: 10
+  },
+  dropdownButton: {
+    width: 200,
+    height: 40,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
   },
 });
