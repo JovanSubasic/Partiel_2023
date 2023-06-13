@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import React, { useState, useEffect  } from 'react';
+import SelectDropdown from 'react-native-select-dropdown';
 
 import Header from './composants/Header';
 import ListJeux from './composants/ListJeux';
@@ -74,10 +75,43 @@ export default function App() {
 
   const [listJeux, setListJeux] = useState(listJeu);
 
+  const [listJeuxFilter, setListJeuxFilter] = useState([]);
+
+  // console.log(listJeuxFilter.length)
+  // liste categorie sans duplication
+  let uniqueCategorie = listJeux.map(({ categorie }) => categorie).filter((element, index) => {
+      return listJeux.map(({ categorie }) => categorie).indexOf(element) === index;
+  });
+
+  function filtrerCategorie(categorie) {
+
+
+    let newList = listJeux.filter(function (element) {
+        return element.categorie == categorie 
+    });
+
+    setListJeuxFilter(newList)
+    // console.log(listJeuxFilter)
+    
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header listJeux={listJeux}/>
-      <ListJeux listJeux={listJeux} />
+      <Header listJeux={listJeux} listJeuxFilter={listJeuxFilter}/>
+      <SelectDropdown
+          data={uniqueCategorie}
+
+          onSelect={(selectedItem, index) => {
+            filtrerCategorie(selectedItem)
+              // console.log(selectedItem);
+          }}
+          // buttonStyle={styles.dropdownButton}
+
+          // defaultValue={selectHour}
+
+          defaultButtonText={'Filtrer par catégorie'}
+      /> 
+      <ListJeux listJeux={listJeux} listJeuxFilter={listJeuxFilter}/>
       <AddJeux listJeux={listJeux} setListJeux={setListJeux}/>
       <StatusBar style="auto" />
     </SafeAreaView>

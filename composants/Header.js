@@ -1,18 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import React, { useState, useEffect  } from 'react';
-// import SelectDropdown from 'react-native-select-dropdown';
 
 
-export default function Header({listJeux}) {
+export default function Header({listJeux, listJeuxFilter}) {
 
+    let nbJeux = 0;
+    if(listJeuxFilter.length > 0) 
+    {
+        nbJeux = listJeuxFilter.length;
+    }
+    else nbJeux = listJeux.length;
+    
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.fixToText}>
                 <Text >Jovan Subasic</Text>
-                <Text >Nb de jeux vidéo : { listJeux.length }</Text>
+                <Text >Nb de jeux vidéo : { nbJeux }</Text>
             </View>
-            <Text >Jovan Subasic</Text>
         </SafeAreaView>
     );
 }

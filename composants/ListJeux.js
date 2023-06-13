@@ -2,14 +2,20 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React, { useState, useEffect  } from 'react';
 
-export default function ListJeux({ listJeux }) {
+export default function ListJeux({ listJeux , listJeuxFilter}) {
 
+    let list = [];
+    if(listJeuxFilter.length > 0) 
+    {
+        list = listJeuxFilter;
+    }
+    else list = listJeux;
     
     return (
         <View style={styles.container}>
             <ScrollView>
                 {
-                    listJeux.map((item, index) => {   
+                    list.map((item, index) => {   
                         
                         return (
                             <View key={index} style={styles.cardCocktails}>
