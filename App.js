@@ -153,7 +153,7 @@ export default function App() {
             defaultButtonText={'Filtrer par prix'}
         /> 
       </View>
-      <ListJeux listJeux={listJeux} listJeuxFilter={listJeuxFilter}/>
+      <ListJeux listJeux={listJeux} listJeuxFilter={listJeuxFilter} setListJeux={setListJeux} setListJeuxFilter={setListJeuxFilter}/>
       <AddJeux listJeux={listJeux} setListJeux={setListJeux}/>
       <StatusBar style="auto" />
     </SafeAreaView>
